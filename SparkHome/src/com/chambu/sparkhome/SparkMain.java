@@ -3,6 +3,10 @@ package com.chambu.sparkhome;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
+import retrofit.RestAdapter;
+import retrofit.http.GET;
+import retrofit.http.Path;
+import retrofit.http.POST;
 
 public class SparkMain extends Activity {
 
