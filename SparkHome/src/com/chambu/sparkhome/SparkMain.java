@@ -14,9 +14,9 @@ import retrofit.client.Response;
 public class SparkMain extends Activity {
     TextView tempText, humText;
     
-    private String TAG = "SparkMain";
-    public String core_token = "7c902d9f9a50679878a4dbfcadc1cf455b48cf46", DeviceID = "50ff6f065067545626270287"; 
-    //need to get token from login
+    private String TAG = "SparkIO-TestAPP";
+    public String core_token = "Your Token Here", DeviceID = "Device ID Here"; 
+    //need to implement grabbing token and Device 
     
     public String SensorType = "humidity";
 
