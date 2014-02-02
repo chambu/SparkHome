@@ -3,6 +3,7 @@ package com.chambu.sparkhome;
 import android.os.Bundle;
 import android.app.Activity;
 import android.widget.TextView;
+import android.util.Log;
 import android.view.Menu;
 import retrofit.RestAdapter;
 import retrofit.http.GET;
@@ -16,12 +17,15 @@ public class SparkMain extends Activity {
 		setContentView(R.layout.activity_spark_main);
 		
 		TextView tempText = (TextView) findViewById(R.id.TempReading);
-		
+	Log.i("Test :", "Started 1");	
 	final RestAdapter restAdapter = new RestAdapter.Builder()
 		.setEndpoint("https://api.spark.io")
         .build();
+	Log.i("Test :", "Started 2");
 	final SparkService apiManager = restAdapter.create(SparkService.class);
-	final TempData tempData = apiManager.getTemp("7c902d9f9a50679878a4dbfcadc1cf455b48cf46","metric");
+	Log.i("Test :", "Started 3");
+	TempData tempData = apiManager.getTemp("7c902d9f9a50679878a4dbfcadc1cf455b48cf46");
+	Log.i("Test :", "Started 4");
 	tempText.setText(tempData.result);
 	}
 
@@ -34,7 +38,7 @@ public class SparkMain extends Activity {
 	
 	public interface SparkService {
 		  @GET("/v1/devices/50ff6f065067545626270287/temperature")
-		  TempData getTemp(@Query("q") String place, @Query("units") String units);
+		  TempData getTemp(@Query("access_token") String place);
 		}
 
 }
