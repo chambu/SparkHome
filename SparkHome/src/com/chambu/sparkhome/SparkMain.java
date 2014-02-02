@@ -2,11 +2,11 @@ package com.chambu.sparkhome;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.widget.TextView;
 import android.view.Menu;
 import retrofit.RestAdapter;
 import retrofit.http.GET;
-import retrofit.http.Path;
-import retrofit.http.POST;
+import retrofit.http.Query;
 
 public class SparkMain extends Activity {
 
@@ -14,6 +14,15 @@ public class SparkMain extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_spark_main);
+		
+		TextView tempText = (TextView) findViewById(R.id.TempReading);
+		
+	final RestAdapter restAdapter = new RestAdapter.Builder()
+		.setEndpoint("https://api.spark.io")
+        .build();
+	final SparkService apiManager = restAdapter.create(SparkService.class);
+	final TempData tempData = apiManager.getTemp("7c902d9f9a50679878a4dbfcadc1cf455b48cf46","metric");
+	tempText.setText(tempData.result);
 	}
 
 	@Override
@@ -22,5 +31,10 @@ public class SparkMain extends Activity {
 		getMenuInflater().inflate(R.menu.spark_main, menu);
 		return true;
 	}
+	
+	public interface SparkService {
+		  @GET("/v1/devices/50ff6f065067545626270287/temperature")
+		  TempData getTemp(@Query("q") String place, @Query("units") String units);
+		}
 
 }
