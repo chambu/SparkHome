@@ -15,7 +15,9 @@ public class SparkMain extends Activity {
     TextView tempText, humText;
     
     private String TAG = "SparkMain";
-    public String core_token = "7c902d9f9a50679878a4dbfcadc1cf455b48cf46";
+    public String core_token = "7c902d9f9a50679878a4dbfcadc1cf455b48cf46", DeviceID = "50ff6f065067545626270287"; 
+    //need to get token from login
+    
     public String SensorType = "humidity";
 
     @Override
@@ -25,32 +27,11 @@ public class SparkMain extends Activity {
 
     tempText = (TextView) findViewById(R.id.TempReading);
     humText = (TextView) findViewById(R.id.HumidityReading);
-
-	RestAdapter restAdapter = new RestAdapter.Builder()
-		.setEndpoint("https://api.spark.io")
-        .build();
-
-	SparkService apiManager = restAdapter.create(SparkService.class);
-
-	apiManager.getSensorData(SensorType, core_token, new Callback<SparkCoreData>() {
-
-
-        @Override
-        public void success(SparkCoreData sensorData, Response response) {
-            Log.d(TAG, "SensorData for " + SensorType +" is " + sensorData.result);
-            if(SensorType=="temperature"){
-            tempText.setText(sensorData.result);
-            }else{
-            humText.setText(sensorData.result);
-            }
-        }
-
-        @Override
-        public void failure(RetrofitError retrofitError) {
-
-        }
-    });
-
+    
+    readSensorData("humidity");
+    readSensorData("temperature");
+    
+	
 	}
 
 	@Override
@@ -60,7 +41,32 @@ public class SparkMain extends Activity {
 		return true;
 	}
 	
-	
+	public void readSensorData(final String SensorType){
+
+		RestAdapter restAdapter = new RestAdapter.Builder()
+		.setEndpoint("https://api.spark.io")
+        .build();
+		
+		SparkService apiManager = restAdapter.create(SparkService.class);
+
+		apiManager.getSensorData(DeviceID, SensorType, core_token, new Callback<SparkCoreData>() {
+
+			@Override
+	        public void success(SparkCoreData sensorData, Response response) {
+	            Log.d(TAG, "SensorData for " + SensorType +" is " + sensorData.result);
+	            if(SensorType=="temperature"){
+	            tempText.setText(sensorData.result);
+	            }else{
+	            humText.setText(sensorData.result);
+	            }
+	        }
+	        @Override
+	        public void failure(RetrofitError retrofitError) {
+
+	        }
+	    });
+
+	}
 
 
 }

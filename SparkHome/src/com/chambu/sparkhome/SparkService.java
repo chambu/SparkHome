@@ -11,6 +11,6 @@ import retrofit.http.Query;
  * Edited by Gowtham on 2/2/14
  */
 public interface SparkService {
-    @GET("/v1/devices/50ff6f065067545626270287/{SensorType}")
-    void getSensorData(@Path("SensorType") String SensorType, @Query("access_token") String token, Callback<SparkCoreData> sensorData);
+    @GET("/v1/devices/{DeviceID}/{SensorType}")
+    void getSensorData(@Path("DeviceID") String DeviceID,@Path("SensorType") String SensorType, @Query("access_token") String token, Callback<SparkCoreData> sensorData);
 }
