@@ -18,11 +18,11 @@ public class SparkMain extends Activity {
 		
 		TextView tempText = (TextView) findViewById(R.id.TempReading);
 	Log.i("Test :", "Started 1");	
-	final RestAdapter restAdapter = new RestAdapter.Builder()
+	RestAdapter restAdapter = new RestAdapter.Builder()
 		.setEndpoint("https://api.spark.io")
         .build();
 	Log.i("Test :", "Started 2");
-	final SparkService apiManager = restAdapter.create(SparkService.class);
+	SparkService apiManager = restAdapter.create(SparkService.class);
 	Log.i("Test :", "Started 3");
 	TempData tempData = apiManager.getTemp("7c902d9f9a50679878a4dbfcadc1cf455b48cf46");
 	Log.i("Test :", "Started 4");
@@ -38,7 +38,7 @@ public class SparkMain extends Activity {
 	
 	public interface SparkService {
 		  @GET("/v1/devices/50ff6f065067545626270287/temperature")
-		  TempData getTemp(@Query("access_token") String place);
+		  TempData getTemp(@Query("access_token") String token);
 		}
 
 }
