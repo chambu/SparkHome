@@ -1,32 +1,56 @@
 package com.chambu.sparkhome;
 
-import android.os.Bundle;
 import android.app.Activity;
-import android.widget.TextView;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.TextView;
+import retrofit.Callback;
 import retrofit.RestAdapter;
-import retrofit.http.GET;
-import retrofit.http.Query;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 
 public class SparkMain extends Activity {
+    TextView tempText, humText;
+    
+    private String TAG = "SparkMain";
+    public String core_token = "7c902d9f9a50679878a4dbfcadc1cf455b48cf46";
+    public String SensorType = "humidity";
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_spark_main);
-		
-		TextView tempText = (TextView) findViewById(R.id.TempReading);
-	Log.i("Test :", "Started 1");	
+
+    tempText = (TextView) findViewById(R.id.TempReading);
+    humText = (TextView) findViewById(R.id.HumidityReading);
+
 	RestAdapter restAdapter = new RestAdapter.Builder()
 		.setEndpoint("https://api.spark.io")
         .build();
-	Log.i("Test :", "Started 2");
+
 	SparkService apiManager = restAdapter.create(SparkService.class);
-	Log.i("Test :", "Started 3");
-	TempData tempData = apiManager.getTemp("7c902d9f9a50679878a4dbfcadc1cf455b48cf46");
-	Log.i("Test :", "Started 4");
-	tempText.setText(tempData.result);
+
+	apiManager.getSensorData(SensorType, core_token, new Callback<SparkCoreData>() {
+
+
+        @Override
+        public void success(SparkCoreData sensorData, Response response) {
+            Log.d(TAG, "SensorData for " + SensorType +" is " + sensorData.result);
+            if(SensorType=="temperature"){
+            tempText.setText(sensorData.result);
+            }else{
+            humText.setText(sensorData.result);
+            }
+        }
+
+        @Override
+        public void failure(RetrofitError retrofitError) {
+
+        }
+    });
+
 	}
 
 	@Override
@@ -36,9 +60,7 @@ public class SparkMain extends Activity {
 		return true;
 	}
 	
-	public interface SparkService {
-		  @GET("/v1/devices/50ff6f065067545626270287/temperature")
-		  TempData getTemp(@Query("access_token") String token);
-		}
+	
+
 
 }

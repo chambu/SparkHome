@@ -1,6 +1,6 @@
 package com.chambu.sparkhome;
 
-public class TempData {
+public class SparkCoreData {
 public String cmd;
 public String name;
 public String result;
