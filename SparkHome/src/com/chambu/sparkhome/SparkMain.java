@@ -2,6 +2,7 @@ package com.chambu.sparkhome;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
@@ -14,11 +15,16 @@ import retrofit.client.Response;
 public class SparkMain extends Activity {
     TextView tempText, humText;
     
+    
     private String TAG = "SparkIO-TestAPP";
-    public String core_token = "Your Token Here", DeviceID = "Device ID Here"; 
+    public String core_token = "token here", DeviceID = "device ID Here"; 
     //need to implement grabbing token and Device 
     
     public String SensorType = "humidity";
+    
+    private Thread timerThread;
+    private Handler mHandler = new Handler();
+ 
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +37,25 @@ public class SparkMain extends Activity {
     readSensorData("humidity");
     readSensorData("temperature");
     
-	
+   // Timer to refresh the data every 10 Seconds 
+   timerThread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while (true) {
+            	
+            
+            	try {
+            		Thread.sleep(10000);
+                    readSensorData("humidity");
+                    readSensorData("temperature");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } 
+            }
+
+        }
+    });
+    timerThread.start();
 	}
 
 	@Override
@@ -41,6 +65,20 @@ public class SparkMain extends Activity {
 		return true;
 	}
 	
+	@Override
+	public void onPause(){
+		super.onPause();
+	//	mHandler.removeCallbacks(timerThread);
+		Log.d(TAG, "onPause");
+	}
+	
+	protected void onResume() {
+	    super.onResume();
+	//    mHandler.removeCallbacks(timerThread);
+	//	mHandler.postDelayed(timerThread, 10000);
+		Log.d(TAG, "onResume");
+	  }
+	
 	public void readSensorData(final String SensorType){
 
 		RestAdapter restAdapter = new RestAdapter.Builder()
@@ -48,7 +86,6 @@ public class SparkMain extends Activity {
         .build();
 		
 		SparkService apiManager = restAdapter.create(SparkService.class);
-
 		apiManager.getSensorData(DeviceID, SensorType, core_token, new Callback<SparkCoreData>() {
 
 			@Override

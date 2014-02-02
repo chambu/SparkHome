@@ -39,7 +39,7 @@
         android:id="@+id/HumidityReading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/Humidity"
+        android:layout_marginLeft="14dp"
         android:layout_alignBottom="@+id/Humidity"
         android:layout_toRightOf="@+id/Humidity"
         android:textAppearance="?android:attr/textAppearanceLarge" />
